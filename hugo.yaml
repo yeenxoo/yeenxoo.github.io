@@ -1,0 +1,4 @@
+baseURL: 'https://yeenxoo.github.io/'
+locale: 'zh-tw'
+title: 'My New Hugo Project'
+theme: ["PaperMod"]
