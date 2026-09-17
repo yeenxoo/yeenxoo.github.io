@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>PaperMod on Enzo筆記</title>
+    <link>http://localhost:1313/tags/papermod/</link>
+    <description>Recent content in PaperMod on Enzo筆記</description>
+    <generator>Hugo</generator>
+    <language>zh-tw</language>
+    <lastBuildDate>Sat, 22 Aug 2026 22:43:32 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/papermod/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugo架設</title>
+      <link>http://localhost:1313/posts/hugo-setup/</link>
+      <pubDate>Sat, 22 Aug 2026 22:43:32 +0800</pubDate>
+      <guid>http://localhost:1313/posts/hugo-setup/</guid>
+      <description>完整記錄在 Fedora Linux 環境下，使用 Hugo 與 PaperMod 主題搭建靜態網站，透過自訂 SSH Host 管理多金鑰，並利用 GitHub Actions 自動編譯發布至 GitHub Pages 的完整流程與排錯心得。</description>
+    </item>
+  </channel>
+</rss>
