@@ -13,17 +13,14 @@
       @apply text-foreground mb-3;
     }
 
-    h3 {
-      @apply italic;
-    }
-
     p,
     strong,
     ol,
     ul,
     figcaption,
     table,
-    code {
+    code,
+    .katex-display {
       @apply text-foreground;
     }
 

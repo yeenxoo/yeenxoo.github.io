@@ -3,9 +3,9 @@ import { defineAstroPaperConfig } from "./src/types/config";
 export default defineAstroPaperConfig({
   site: {
     url: "https://yeenxoo.github.io/",
-    title: "yeenxoo's Notes",
+    title: "Enzo's Notes",
     description: "我的學習筆記。",
-    author: "yeenxoo",
+    author: "Enzo",
     profile: "https://github.com/yeenxoo",
     ogImage: "default-og.jpg",
     lang: "en",
@@ -30,13 +30,9 @@ export default defineAstroPaperConfig({
   },
   socials: [
     { name: "github",   url: "https://github.com/yeenxoo" },
+    { name: "discord",  url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", linkTitle: "Discord: yeenxoo" },
+    { name: "telegram", url: "https://t.me/hyrrrooo" },
+    { name: "mail",     url: "mailto:yeenxoo@gmail.com" },
   ],
-  shareLinks: [
-    { name: "whatsapp", url: "https://wa.me/?text=" },
-    { name: "facebook", url: "https://www.facebook.com/sharer.php?u=" },
-    { name: "x",        url: "https://x.com/intent/post?url=" },
-    { name: "telegram", url: "https://t.me/share/url?url=" },
-    { name: "pinterest", url: "https://pinterest.com/pin/create/button/?url=" },
-    { name: "mail",     url: "mailto:?subject=See%20this%20post&body=" },
-  ],
+  shareLinks: [],
 });
