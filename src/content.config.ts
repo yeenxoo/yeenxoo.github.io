@@ -39,4 +39,17 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { posts, pages };
+// Password-protected posts. The plaintext lives only on the author's machine
+// (gitignored); `pnpm run encrypt` turns the locally built preview into
+// ciphertext under src/data/locked/, which is what gets committed.
+const privatePosts = defineCollection({
+  loader: glob({ pattern: "*.{md,mdx}", base: "./src/content/private" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    pubDatetime: z.date(),
+    tags: z.array(z.string()).default([]),
+  }),
+});
+
+export const collections = { posts, pages, private: privatePosts };

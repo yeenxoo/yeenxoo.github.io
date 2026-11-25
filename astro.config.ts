@@ -30,7 +30,9 @@ export default defineConfig({
     mdx(),
     sitemap({
       filter: page =>
-        config.features?.showArchives !== false || !/\/archives\/?$/.test(page),
+        !/\/private(-preview)?\//.test(page) &&
+        (config.features?.showArchives !== false ||
+          !/\/archives\/?$/.test(page)),
     }),
     inlineTocDeprecation(),
   ],

@@ -1,0 +1,132 @@
+---
+// Password-protected post. Only ciphertext (src/data/locked/<slug>.json) is in
+// the repo; the browser decrypts it with the password using WebCrypto
+// (PBKDF2-SHA256 -> AES-256-GCM).
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import config from "@/config";
+
+type Locked = { v: 1; iter: number; salt: string; iv: string; ct: string };
+
+export async function getStaticPaths() {
+  const files = import.meta.glob<{ default: Locked }>(
+    "/src/data/locked/*.json",
+    {
+      eager: true,
+    }
+  );
+  return Object.entries(files).map(([path, mod]) => ({
+    params: {
+      slug: path
+        .split("/")
+        .pop()!
+        .replace(/\.json$/, ""),
+    },
+    props: { data: mod.default },
+  }));
+}
+
+const { data } = Astro.props;
+const lockedTitle = "受密碼保護的文章";
+---
+
+<Layout
+  title={`${lockedTitle} | ${config.site.title}`}
+  description="這篇文章需要密碼才能閱讀。"
+>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+  <Header />
+  <main id="main-content" class="app-layout mt-8">
+    <div id="locked-form-wrap">
+      <h1 class="text-accent inline-block text-2xl font-bold sm:text-3xl">
+        🔒 {lockedTitle}
+      </h1>
+      <p class="mt-4">請輸入密碼。</p>
+      <form id="locked-form" class="mt-4 flex max-w-md gap-2">
+        <input
+          id="locked-password"
+          type="password"
+          autocomplete="current-password"
+          aria-label="密碼"
+          required
+          class="border-border bg-background focus:outline-accent min-w-0 flex-1 rounded border px-3 py-2"
+        />
+        <button
+          type="submit"
+          class="bg-accent text-accent-foreground rounded px-4 py-2 font-medium"
+        >
+          解鎖
+        </button>
+      </form>
+      <p id="locked-error" class="mt-2 text-red-500" hidden>密碼錯誤。</p>
+    </div>
+    <div id="locked-content"></div>
+  </main>
+  <Footer />
+  <script
+    type="application/json"
+    id="locked-data"
+    set:html={JSON.stringify(data)}
+  />
+</Layout>
+
+<script is:inline data-astro-rerun>
+  (() => {
+    const form = document.getElementById("locked-form");
+    if (!form) return;
+    const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+    async function decrypt(password, data) {
+      const base = await crypto.subtle.importKey(
+        "raw",
+        new TextEncoder().encode(password),
+        "PBKDF2",
+        false,
+        ["deriveKey"]
+      );
+      const key = await crypto.subtle.deriveKey(
+        {
+          name: "PBKDF2",
+          salt: b64(data.salt),
+          iterations: data.iter,
+          hash: "SHA-256",
+        },
+        base,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+      );
+      const plain = await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: b64(data.iv) },
+        key,
+        b64(data.ct)
+      );
+      return JSON.parse(new TextDecoder().decode(plain));
+    }
+
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const input = document.getElementById("locked-password");
+      const error = document.getElementById("locked-error");
+      const button = form.querySelector("button");
+      const data = JSON.parse(
+        document.getElementById("locked-data").textContent
+      );
+      error.hidden = true;
+      button.disabled = true;
+      try {
+        const payload = await decrypt(input.value, data);
+        document.getElementById("locked-content").innerHTML = payload.html;
+        document.getElementById("locked-form-wrap").remove();
+        document.title =
+          payload.title + " | " + document.title.split(" | ").pop();
+      } catch {
+        error.hidden = false;
+        input.select();
+      } finally {
+        button.disabled = false;
+      }
+    });
+  })();
+</script>

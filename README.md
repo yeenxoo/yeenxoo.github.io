@@ -21,6 +21,18 @@ description: 一句話摘要
 
 push 到 `main` 後會由 GitHub Actions 自動部署。
 
+## 密碼保護的文章
+
+原文放在 `src/content/private/`（已被 `.gitignore` 排除，只存在本機），本地預覽在 `/private-preview/<文章名>/`。
+
+```bash
+pnpm run build    # 產生本地預覽
+pnpm run encrypt  # 每篇各自輸入密碼，產生 src/data/locked/<文章名>.json
+pnpm run encrypt <文章名>  # 只加密這一篇
+```
+
+只 commit 加密後的 JSON，網站上的網址是 `/private/<文章名>/`，輸入密碼後才會顯示內容。
+
 ## 本地開發
 
 ```bash

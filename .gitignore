@@ -31,3 +31,7 @@ public/pagefind
 
 # docker compose
 compose.override.yaml
+
+# private (password-protected) posts: plaintext never leaves this machine
+src/content/private/*
+!src/content/private/.gitkeep
